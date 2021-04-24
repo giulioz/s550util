@@ -1,0 +1,115 @@
+Documentation for s550util
+==========================
+
+Introduction:
+
+S550util is a utility that is able to list the contents of disks for the
+Roland S-50, S-330 and S-550 series. Also extraction of tones as .wav files
+is possible. S550util works on disk images. When run on linux systems it is
+possible to directly address the disks in the floppy drive using the 
+appropriate device name.
+
+Package list:
+
+The archive 's550util.tar' should contain the following files:
+Makefile
+	Makefile needed to build the source
+README
+	The file you read
+rs12.h
+s50dir.h
+	Header files 
+s550util.c
+	Main source file
+s2img.sh
+	Sample shell script that uses s550util
+
+Compiling the source:
+
+Compiling is straight forward if you have the GNU gcc compiler and GNU 
+binutils installed. This should be the case if you are working under linux.
+On Windows systems gcc is part of the mingw environment.
+After extracting the source just do a 'make'.
+Compile and run was tested under:
+SunOS on sparc,
+MS Windows on x86,
+Mac OS X (Darwin) on powerpc,
+Linux on x86.
+
+Usage:
+
+Without parameters or '-h' the following help is shown.
+
+s550util v. 1.01 (Nov  3 2006) (c) 2004-2006 Peter Heitzer
+Usage: s550util  -h|-l <file>|[-r] -{x|X} <file> [s1 .. sn]
+  -h: show help
+  -r: raw mode, ignore tone start and end points
+  -l <file>:  show info for image <file>
+  -x <file> <s1> .. <sn> extract samples s1 .. sn
+  -X <file> : as -x but overwrite files
+Sample numbers are in Roland notation, e.g. 11 for first sample.
+A range of sample numbers can be given as <first>-<last>, e.g. 14-16. Only
+original tones can be extracted.
+
+The options in detail:
+
+-h: show short help
+
+-r: raw mode
+Normally the extracted samples contain only the samples between start and end
+point of the tone. If you wish to extract the whole sample you have to use
+this parameter. 
+
+-l: list directory of disk
+Before you extract samples of a disk it is useful to look whats on the disk.
+Here is an example of a listing.
+
+S-50 disk 'Wild Kingdom'
+11: 'Seal    ' subtone,  30kHz, bank: A, S:014336, E:022016, L:018689 (13,2)
+12: 'Doggie 1' subtone,  30kHz, bank: A, S:000000, E:014592, L:000002 (13,2)
+13: 'Doggie 2' origtone, 30kHz, bank: B, S:000000, E:014080, L:009473 (16,2)
+...
+
+The first line shows that the disk is for a S-50 sampler and was named
+'Wild Kingdom'. The following lines show the data for each used tone in the
+order tone number, tone name, type, sample rate, bank, start point, end point,
+loop point. The start and length in wave segments are shown in parenthesis.
+
+-{x|X} <file> [ samples ]
+This are the options for sample extraction. Sample extraction only works for
+original tones. All samples are extracted to the current working directory.
+Each sample gets the name of the tone with the extension .wav. Leading
+blanks from tone names are removed and blanks in tone names replaced with
+underscores. With option '-x' no files will be overwritten.
+If a file with the same name is already in the current working directory it
+is prefixed with the tone number. If this file name also exists no file is 
+written. If option '-X' is used files get overwritten unless they are non
+writable by their permissions.
+The extract option is followed by the image file or device name and the numbers
+of the samples. 
+
+Examples:
+
+s550util -x test.img 11 27 41-48
+Extract samples 11 (the 1st), 27 and 41..48 from image test.img.
+
+s550util -x /dev/fd0 11-48
+Linux only, extracts all original tones from disk in floppy drive. /dev/fd0
+is the device name for the 1st floppy in the most linux distributions.
+
+
+Some hints for archiving your valuable sample disks
+
+A sample disk on the Roland S-50, S-330 or S-550 has only a capacity of 720 KiB.
+Therefore you need a lot of disks (and space) for a suitable sample library.
+CD-R media on the other hand are compact (about 1000 disks fit on a single CD-R)
+and not as prune to read errors as floppy disks. If you own a library of valuable
+samples it is a good idea to make backups before the disks get unreadable.
+Using s550util you can combine the process of backup and documentation.
+The archiv contains s2img.sh, an example of a shell script that prompts for a sample 
+disk and makes a disk image and a text file with the directory of each disk.
+
+Have fun!
+
+Peter Heitzer 2006-11-03
+
